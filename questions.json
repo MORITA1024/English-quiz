@@ -1,0 +1,246 @@
+{
+  "Day1": [
+    {
+      "id": 1,
+      "question": "I have to **attend** the meeting.",
+      "choices": ["延期する", "出席する", "断る", "忘れる"],
+      "answer": 1
+    },
+    {
+      "id": 2,
+      "question": "He tried to **avoid** the problem.",
+      "choices": ["解決する", "避ける", "求める", "認める"],
+      "answer": 1
+    },
+    {
+      "id": 3,
+      "question": "Please **check** your answer again.",
+      "choices": ["交換する", "確認する", "変える", "減らす"],
+      "answer": 1
+    },
+    {
+      "id": 4,
+      "question": "She **decided** to study abroad.",
+      "choices": ["決めた", "諦めた", "迷った", "相談した"],
+      "answer": 0
+    },
+    {
+      "id": 5,
+      "question": "They **offer** free drinks to customers.",
+      "choices": ["求める", "提供する", "拒否する", "比較する"],
+      "answer": 1
+    },
+    {
+      "id": 6,
+      "question": "I can’t **afford** to buy a new car.",
+      "choices": ["買う余裕がある", "買う余裕がない", "借りる", "手放す"],
+      "answer": 1
+    },
+    {
+      "id": 7,
+      "question": "He **suggested** going to the park.",
+      "choices": ["約束した", "提案した", "忘れた", "注意した"],
+      "answer": 1
+    },
+    {
+      "id": 8,
+      "question": "The teacher **explained** the rule.",
+      "choices": ["覚えた", "説明した", "教えた", "許した"],
+      "answer": 1
+    },
+    {
+      "id": 9,
+      "question": "We must **reduce** waste.",
+      "choices": ["増やす", "減らす", "集める", "捨てる"],
+      "answer": 1
+    },
+    {
+      "id": 10,
+      "question": "She **refused** his invitation.",
+      "choices": ["受け入れた", "拒否した", "喜んだ", "繰り返した"],
+      "answer": 1
+    },
+    {
+      "id": 11,
+      "question": "I **expect** him to come soon.",
+      "choices": ["期待する", "求める", "感じる", "決める"],
+      "answer": 0
+    },
+    {
+      "id": 12,
+      "question": "He **continued** to work hard.",
+      "choices": ["やめた", "続けた", "変えた", "忘れた"],
+      "answer": 1
+    },
+    {
+      "id": 13,
+      "question": "Please **describe** your hometown.",
+      "choices": ["書き写す", "描写する", "見せる", "批判する"],
+      "answer": 1
+    },
+    {
+      "id": 14,
+      "question": "I can’t **deny** that fact.",
+      "choices": ["否定する", "受け入れる", "忘れる", "繰り返す"],
+      "answer": 0
+    },
+    {
+      "id": 15,
+      "question": "He **depends** on his parents.",
+      "choices": ["頼る", "離れる", "忘れる", "敬う"],
+      "answer": 0
+    },
+    {
+      "id": 16,
+      "question": "The bus **arrived** on time.",
+      "choices": ["遅れた", "到着した", "出発した", "通過した"],
+      "answer": 1
+    },
+    {
+      "id": 17,
+      "question": "We **discussed** the plan.",
+      "choices": ["決定した", "話し合った", "否定した", "調査した"],
+      "answer": 1
+    },
+    {
+      "id": 18,
+      "question": "Don’t **waste** your time.",
+      "choices": ["使い果たす", "無駄にする", "集める", "節約する"],
+      "answer": 1
+    },
+    {
+      "id": 19,
+      "question": "The movie **includes** many famous actors.",
+      "choices": ["含む", "超える", "匹敵する", "隠す"],
+      "answer": 0
+    },
+    {
+      "id": 20,
+      "question": "He **failed** the exam.",
+      "choices": ["合格した", "落ちた", "喜んだ", "逃げた"],
+      "answer": 1
+    }
+  ],
+  "Day2": [
+    {
+      "id": 1,
+      "question": "She wants to **improve** her English.",
+      "choices": ["維持する", "上達させる", "減らす", "忘れる"],
+      "answer": 1
+    },
+    {
+      "id": 2,
+      "question": "We must **protect** the environment.",
+      "choices": ["守る", "壊す", "変える", "調べる"],
+      "answer": 0
+    },
+    {
+      "id": 3,
+      "question": "He **explored** the new city.",
+      "choices": ["計画した", "探検した", "忘れた", "諦めた"],
+      "answer": 1
+    },
+    {
+      "id": 4,
+      "question": "Please **fill** out this form.",
+      "choices": ["捨てる", "書き込む", "読む", "渡す"],
+      "answer": 1
+    },
+    {
+      "id": 5,
+      "question": "She **earned** enough money to travel.",
+      "choices": ["貯めた", "失った", "稼いだ", "借りた"],
+      "answer": 2
+    },
+    {
+      "id": 6,
+      "question": "The company **produces** cars.",
+      "choices": ["生産する", "運転する", "販売する", "修理する"],
+      "answer": 0
+    },
+    {
+      "id": 7,
+      "question": "I can’t **recall** his name.",
+      "choices": ["思い出す", "呼びかける", "消す", "書く"],
+      "answer": 0
+    },
+    {
+      "id": 8,
+      "question": "He **appeared** nervous.",
+      "choices": ["見える", "現れた", "隠れた", "落ち着いている"],
+      "answer": 1
+    },
+    {
+      "id": 9,
+      "question": "We need to **increase** our sales.",
+      "choices": ["減らす", "維持する", "増やす", "共有する"],
+      "answer": 2
+    },
+    {
+      "id": 10,
+      "question": "She **prefers** tea to coffee.",
+      "choices": ["比べる", "好む", "混ぜる", "注ぐ"],
+      "answer": 1
+    },
+    {
+      "id": 11,
+      "question": "Please **remove** your shoes.",
+      "choices": ["履く", "脱ぐ", "投げる", "洗う"],
+      "answer": 1
+    },
+    {
+      "id": 12,
+      "question": "They **require** more time.",
+      "choices": ["求める", "減らす", "与える", "遅れる"],
+      "answer": 0
+    },
+    {
+      "id": 13,
+      "question": "He **achieved** his goal.",
+      "choices": ["失敗した", "達成した", "維持した", "忘れた"],
+      "answer": 1
+    },
+    {
+      "id": 14,
+      "question": "Don’t **interrupt** me.",
+      "choices": ["邪魔する", "応援する", "指示する", "聞く"],
+      "answer": 0
+    },
+    {
+      "id": 15,
+      "question": "The train **departed** at noon.",
+      "choices": ["到着した", "出発した", "停止した", "通過した"],
+      "answer": 1
+    },
+    {
+      "id": 16,
+      "question": "She **avoided** making eye contact.",
+      "choices": ["避けた", "続けた", "求めた", "喜んだ"],
+      "answer": 0
+    },
+    {
+      "id": 17,
+      "question": "He **expressed** his feelings honestly.",
+      "choices": ["隠した", "表現した", "比較した", "変えた"],
+      "answer": 1
+    },
+    {
+      "id": 18,
+      "question": "The child **behaved** well.",
+      "choices": ["行儀よくした", "泣いた", "逃げた", "寝た"],
+      "answer": 0
+    },
+    {
+      "id": 19,
+      "question": "Please **prepare** for the exam.",
+      "choices": ["諦める", "準備する", "忘れる", "始める"],
+      "answer": 1
+    },
+    {
+      "id": 20,
+      "question": "The teacher **encouraged** the students.",
+      "choices": ["褒めた", "応援した", "驚かせた", "叱った"],
+      "answer": 1
+    }
+  ]
+}
