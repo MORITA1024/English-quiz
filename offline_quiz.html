@@ -1,0 +1,166 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>単語ドリル（自動更新版）</title>
+<style>
+  body{font-family:system-ui,-apple-system,"Segoe UI",Roboto;margin:16px}
+  .wrap{max-width:720px;margin:0 auto}
+  h1{font-size:20px;margin:8px 0 16px}
+  label{display:block;margin:10px 0 6px}
+  input,select,button{font-size:16px;padding:10px;width:100%;box-sizing:border-box}
+  .btn{background:#0d6efd;color:#fff;border:none;border-radius:10px;margin-top:12px}
+  .q{border:1px solid #ddd;border-radius:10px;padding:12px;margin:12px 0}
+  .choice{display:block;border:1px solid #eee;border-radius:8px;padding:8px;margin:8px 0}
+  .meta{color:#555;font-size:14px}
+  .code{font-family:ui-monospace,Consolas,monospace;font-size:20px;letter-spacing:1px}
+  .row{display:flex;gap:10px}.row>*{flex:1}
+  .card{border:1px solid #ddd;border-radius:10px;padding:12px;margin:12px 0}
+  .ok{color:#0a7a2f}.ng{color:#c1121f}
+</style>
+
+<div class="wrap">
+  <h1>単語ドリル</h1>
+  <p class="meta" id="status">問題を読み込んでいます…</p>
+
+  <section id="start" hidden>
+    <label>生徒番号（3桁）</label>
+    <input id="sid" maxlength="3" placeholder="001" inputmode="numeric">
+    <label>Day</label>
+    <select id="day"></select>
+    <button class="btn" id="go">開始</button>
+  </section>
+
+  <section id="quiz" hidden>
+    <div class="meta">ID: <b id="vSid"></b> / Day <b id="vDay"></b></div>
+    <div id="qs"></div>
+    <button class="btn" id="submit">採点</button>
+  </section>
+
+  <section id="result" hidden>
+    <div class="card"><b>スコア：<span id="score"></span></b></div>
+    <h3>提出コード（先生に見せる）</h3>
+    <div class="card">
+      <div class="code" id="code">（採点後に表示）</div>
+      <div class="row">
+        <button class="btn" id="copy">コードをコピー</button>
+        <button class="btn" id="again">もう一度解く</button>
+      </div>
+    </div>
+    <details>
+      <summary>間違えた問題（復習）</summary>
+      <div id="wrongs"></div>
+    </details>
+    <p><button class="btn" id="back">最初に戻る</button></p>
+  </section>
+</div>
+
+<script>
+const QUESTIONS_URL = "https://morita1024.github.io/English-quiz/questions.json";
+const CACHE_KEY = "QUESTIONS_CACHE_V1"; // 形式変更時はバージョンを上げる
+const el = id=>document.getElementById(id);
+let QUESTIONS = null;
+
+// ------- 自動取得 + キャッシュ -------
+async function loadQuestions() {
+  el("status").textContent = "最新の問題を取得しています…";
+  try {
+    const r = await fetch(QUESTIONS_URL, {cache:"no-store"});
+    if(!r.ok) throw new Error("HTTP "+r.status);
+    const data = await r.json();
+    if(!data || typeof data!=="object") throw new Error("JSON不正");
+    QUESTIONS = data;
+    localStorage.setItem(CACHE_KEY, JSON.stringify({ts:Date.now(), data}));
+    el("status").textContent = "最新の問題を読み込みました。";
+  } catch(e) {
+    // 取得失敗→キャッシュ使用
+    const cached = localStorage.getItem(CACHE_KEY);
+    if(cached){
+      const {data} = JSON.parse(cached);
+      QUESTIONS = data;
+      el("status").textContent = "オンライン取得に失敗。前回の問題を表示します（オフライン）。";
+    }else{
+      el("status").textContent = "問題を取得できませんでした。ネットに接続して再読込してください。";
+      return false;
+    }
+  }
+  return true;
+}
+
+function refreshDays(){
+  const sel = el("day");
+  sel.innerHTML = '<option value="">選択</option>' +
+    Object.keys(QUESTIONS).map(k=>`<option value="${k}">${k}</option>`).join("");
+}
+
+// ------- 提出コード（Crockford Base32 + CRC8） -------
+const B32 = "0123456789ABCDEFGHJKMNPQRSTVWXYZ";
+function crc8(bytes){let c=0;for(const b of bytes){c^=b;for(let i=0;i<8;i++)c=(c&0x80)?((c<<1)^0x07)&255:(c<<1)&255;}return c;}
+function toBytes(ver, day, sid, score, wrongMask){
+  const bits=[]; const push=(v,n)=>{for(let i=n-1;i>=0;i--) bits.push((v>>i)&1);};
+  push(ver,4); push(day,9); push(sid,10); push(score,5); push(wrongMask,20);
+  const out=new Uint8Array(7);
+  for(let i=0;i<6;i++){let x=0;for(let b=0;b<8;b++) x=(x<<1)|bits[i*8+b]; out[i]=x;}
+  out[6]=crc8(out.slice(0,6)); return out;
+}
+function b32encode(bytes){
+  let acc=0,bits=0,out=""; for(const b of bytes){acc=(acc<<8)|b;bits+=8;while(bits>=5){bits-=5;out+=B32[(acc>>bits)&31];}}
+  if(bits>0) out+=B32[(acc<<(5-bits))&31]; return out.slice(0,12);
+}
+
+// ------- 画面イベント -------
+async function init(){
+  const ok = await loadQuestions();
+  if(!ok) return;
+  refreshDays();
+  el("start").hidden=false;
+}
+init();
+
+el("go").onclick = ()=>{
+  const sid = el("sid").value.trim().padStart(3,"0");
+  const dayKey = el("day").value;
+  if(!/^\d{3}$/.test(sid)) return alert("生徒番号は3桁で入力してください（例: 001）");
+  if(!dayKey) return alert("Dayを選択してください。");
+
+  const qs = QUESTIONS[dayKey]; if(!qs || !qs.length) return alert("問題が見つかりません。");
+  el("vSid").textContent=sid; el("vDay").textContent=dayKey.replace("Day","");
+  const box = el("qs"); box.innerHTML="";
+  for(const q of qs){
+    const div=document.createElement("div"); div.className="q";
+    div.innerHTML=`<div><b>Q${q.id}.</b> ${q.question}</div>`+
+      q.choices.map((c,i)=>`<label class="choice"><input type="radio" name="q${q.id}" value="${i}"> ${i+1}. ${c}</label>`).join("");
+    box.appendChild(div);
+  }
+  el("start").hidden=true; el("quiz").hidden=false; el("result").hidden=true;
+};
+
+el("submit").onclick = ()=>{
+  const day = Number(el("vDay").textContent);
+  const sid3 = el("vSid").textContent;
+  const qs = QUESTIONS["Day"+day];
+  let score=0, wrongMask=0, wrongItems=[];
+  for(const q of qs){
+    const chosen = document.querySelector(`input[name="q${q.id}"]:checked`);
+    const val = chosen ? Number(chosen.value) : null;
+    if(val===q.answer) score++;
+    else { wrongMask |= (1<<(q.id-1)); wrongItems.push({id:q.id,question:q.question,correct:q.choices[q.answer],chosen:(val!=null? q.choices[val]:"未選択")}); }
+  }
+  const bytes = toBytes(1, day, Number(sid3), score, wrongMask);
+  let code = b32encode(bytes); code = code.slice(0,4)+"-"+code.slice(4,8)+"-"+code.slice(8,12);
+
+  localStorage.setItem(`vocab_day${day}_id${sid3}`, JSON.stringify({id:sid3,day,score,wrongMask,ts:new Date().toISOString()}));
+
+  el("score").textContent = `${score} / ${qs.length}`;
+  el("code").textContent = code;
+  el("wrongs").innerHTML = wrongItems.map(w=>(
+    `<div class="q"><div><b>Q${w.id}.</b> ${w.question}</div>`+
+    `<div class="ng">正答：${w.correct}</div>`+
+    `<div>あなた：${w.chosen}</div></div>`
+  )).join("") || '<div class="ok">全問正解！</div>';
+
+  el("quiz").hidden=true; el("result").hidden=false;
+};
+el("copy").onclick = async ()=>{ try{ await navigator.clipboard.writeText(el("code").textContent); alert("提出コードをコピーしました。"); }catch{ alert("コピーできませんでした。手で選択してください。"); }};
+el("again").onclick = ()=>{ el("result").hidden=true; el("quiz").hidden=false; };
+el("back").onclick = ()=>{ el("result").hidden=true; el("quiz").hidden=true; el("start").hidden=false; };
+</script>
